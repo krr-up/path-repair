@@ -2,13 +2,13 @@
 
 This repository contains encodings based of reparation of conflicting MAPF plans and paths.
 
-## Wait merging
+## Wait injection
 
 The encodings on this folder takes a set of shortest path ('spath/3') and give as an output a plan such that the only authorized move actions are the one present in the original path.
 To solve the potential conflicts between those plans, the only
 
 * action-placement.lp give a timepoint to each move action.
-  - Edge conflicts are defined by forbiden pair of actions at the same timepoint.
+  - Edge conflicts are defined by forbidden pair of actions at the same timepoint.
   - The position of the agent is deduced at each timestep to define the vertex conflicts.
 
 * fill-with-wait.lp is a variant of action-placement.lp.
@@ -34,7 +34,17 @@ Thoses plans may give better results.
 It may be interesting to define the properties of repairable plans.
 This folder contains encodings to represent it.
 
-TODO :
+* vert-acy.lp
+  - From the initial paths, we take a node per agent for each vertex he visit.
+  - We add edge between those nodes to represent the order of events, to assess there is no circle in the resulting graph.
+  - This encoding assume acyclic path as an input.
+
+* vert-perm.lp
+  - From every vertex, we define a permutation of every agent that has to visit him.
+  - We explicit the restrictions on those permutations
+  - This encoding assume acyclic path as an input.
+
+## TODO
 [ ] Add plan (path) checkers, to define the properties of repairable plan (path).
 [ ] Goal swapping
 [ ] Move injection
