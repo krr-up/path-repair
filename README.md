@@ -5,7 +5,7 @@ This repository contains encodings based of reparation of conflicting MAPF plans
 ## Wait injection
 
 The encodings on this folder takes a set of shortest path ('spath/3') and give as an output a plan such that the only authorized move actions are the one present in the original path.
-To solve the potential conflicts between those plans, the only
+To solve the potential conflicts between those plans, the only authorized change in the plan is the injection of "wait" actions (sometimes represented by the absence of action in a timepoint).
 
 * action-placement.lp give a timepoint to each move action.
   - Edge conflicts are defined by forbidden pair of actions at the same timepoint.
@@ -45,7 +45,7 @@ This folder contains encodings to represent it.
   - This encoding assume acyclic path as an input.
 
 ## TODO
-[ ] Add plan (path) checkers, to define the properties of repairable plan (path).
-[ ] Goal swapping
-[ ] Move injection
-[ ] Position ordering / move+position ordering
+- [ ] Add plan (path) checkers, to define the properties of repairable plan (path).
+- [ ] Goal swapping
+- [ ] Move injection
+- [ ] Position ordering / move+position ordering
