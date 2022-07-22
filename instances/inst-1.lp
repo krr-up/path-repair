@@ -1,0 +1,9 @@
+edge(1,2).
+edge(2,3).
+edge(3,4).
+edge(4,2).
+edge(2,5).
+edge(2,6).
+edge(6,2).
+task(a,1,5).
+task(b,3,4).
