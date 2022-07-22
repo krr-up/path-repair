@@ -13,7 +13,7 @@
 &diff{ (A,V,V')     - (A',V',V)     } <= -1 :- e_conflict(A,A',V,V').
 
 %%Vertice conflict
-{ v_conflict(A ,V,V2 ,A',V1',V) } :- trail(A,V1,V,V2), trail(A',V1',V,V2'), A<A'.
+{ v_conflict(A ,V,V2 ,A',V1',V) } :- trail(A,_,V,V2), trail(A',V1',V,_), A<A'.
   v_conflict(A',V,V2',A ,V1 ,V)   :- trail(A,V1,V,V2), trail(A',V1',V,V2'), A<A', not v_conflict(A,V,V2,A',V1',V).
 
 &diff{ (A,V,V2)     - (A',V1',V)    } <= 0  :- v_conflict(A,V,V2,A',V1',V).
