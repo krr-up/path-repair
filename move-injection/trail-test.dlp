@@ -13,13 +13,5 @@ trail(A,G,garage) :- task(A,_,G).
 :- task(A,_,G), not trails(A,_,G,garage).
 :- trail(A,V,V'), not trails(A,_,V,V'), V!=garage.
 
-
-edge(1,2).
-edge(2,3).
-edge(3,4).
-edge(4,2).
-edge(2,5).
-task(a,1,5).
-
 %#show trail/3.
 #show trails/4.

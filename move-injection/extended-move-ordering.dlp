@@ -1,0 +1,38 @@
+% We get the visits
+visit(A,V) :- spath(A,V,_).
+visit(A,V) :- spath(A,_,V).
+visit(A,D) :- detour(A,_,D).
+
+%We define the trails
+trail(A,V,V') :- spath(A,V,V').
+trail(A,V,V') :- detour(A,V,V').
+trail(A,V',V) :- detour(A,V,V').
+
+% The edge weight is the travel time between vertices
+&diff{ plan(A,move(V,V')) - plan(A,move(V',V'')) } <= -1    :- spath(A,V,V'), spath(A,V',V'').
+
+% edge constraint
+{ ec_solving((A,move(V,V')),(A',move(V',V))) }   :- spath(A,V,V'), spath(A',V',V), A < A'.
+  ec_solving((A',move(V',V)),(A,move(V,V')))     :- spath(A,V,V'), spath(A',V',V), A < A', not ec_solving((A,move(V,V')),(A',move(V',V))).
+&diff{ plan(A,M) - plan(A',M') } <= -1 :- ec_solving((A,M),(A',M')).
+
+%vertex constraint
+  vc_solving((A',move(V',V'')),(A,move(V,V')))   :- trail(A,V,V'), trail(A',V',V''), A!=A', not vc_solving((A,move(V',_)),(A',move(_,V'))).
+&diff{ plan(A,M) - plan(A',M') } <= 0 :- vc_solving((A,M),(A',M')).
+
+% possibility to make a detour
+{ detour(A,V); detour(A,V'); detour(A',V); detour(A',V') }1 :- spath(A,V,V'), spath(A',V',V), A < A'.
+{ detour(A,V,D) : edge(V,D), edge(D,V) }=1 :- detour(A,V).
+%% no new possible edge conflict
+:- detour(_,V,D), spath(_,V,D).
+:- detour(_,V,D), spath(_,D,V).
+:- detour(A,V,D), detour(A',V,D), A<A'.
+:- detour(A,V,D), detour(A',D,V), A<A'.
+%% no new possible vertex conflict
+:- detour(A,_,D), visit(A',D), A!=A'.
+%% include the detour in the plan
+&diff{ plan(A,move(V,D))  - plan(A,move(D,V))  } <= -1    :- detour(A,V,D).
+&diff{ plan(A,move(V,V')) - plan(A,move(V',D)) } <= -1    :- spath(A,V,V'), detour(A,V',D).
+&diff{ plan(A,move(D,V))  - plan(A,move(V,V')) } <= -1    :- detour(A,V,D), spath(A,V,V').
+
+#show.

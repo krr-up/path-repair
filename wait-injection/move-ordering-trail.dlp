@@ -1,0 +1,37 @@
+%Ordering
+
+%%Succesions
+%&diff{ (A,garage,V) - (A,V,V')      } <= 0  :- trail(A,garage,V,V').
+%&diff{ (A,V,V')     - (A,V',garage) } <= 0  :- trail(A,V,V',garage).
+%&diff{ (A,V,V')     - (A,V',V'')    } <= -1 :- trail(A,V,V',V''), V!=garage, V''!=garage.
+&diff{ (A,V,V')     - (A,V',V'')    } <= -1 :- trail(A,V,V',V'').
+
+%%Edge conflict
+{ e_conflict(A,A',V,V') } :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=garage, V'!=garage.
+  e_conflict(A',A,V',V)   :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=garage, V'!=garage, not e_conflict(A,A',V,V').
+
+&diff{ (A,V,V')     - (A',V',V)     } <= -1 :- e_conflict(A,A',V,V').
+
+%%Vertice conflict
+{ v_conflict(A ,V,V2 ,A',V1',V) } :- trail(A,V1,V,V2), trail(A',V1',V,V2'), A<A'.
+  v_conflict(A',V,V2',A ,V1 ,V)   :- trail(A,V1,V,V2), trail(A',V1',V,V2'), A<A', not v_conflict(A,V,V2,A',V1',V).
+
+&diff{ (A,V,V2)     - (A',V1',V)    } <= 0  :- v_conflict(A,V,V2,A',V1',V).
+
+%%Cornercases
+:- v_conflict(_,_,garage,_,_,_). %Stay on the graph at the end
+:- v_conflict(_,_,_,_,garage,_). %Is on the graph from the begining
+
+%Output
+%#show trail/4.
+#show.
+
+%trail(1,garage,(1,1),(2,1)).
+%trail(1,(1,1),(2,1),(2,2)).
+%trail(1,(2,1),(2,2),(2,1)).
+%trail(1,(2,2),(2,1),(3,1)).
+%trail(1,(2,1),(3,1),garage).
+
+%trail(2,garage,(3,1),(2,1)).
+%trail(2,(3,1),(2,1),(1,1)).
+%trail(2,(2,1),(1,1),garage).
