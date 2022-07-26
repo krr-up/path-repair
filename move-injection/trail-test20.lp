@@ -7,5 +7,5 @@
 :- goal(A,G), not trail(A,_,G,garage).
 
 %Output
-#show trail/4.
+%#show trail/4.
 %#show.

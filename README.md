@@ -49,3 +49,4 @@ This folder contains encodings to represent it.
 - [ ] Goal swapping
 - [ ] Move injection
 - [ ] Position ordering / move+position ordering
+- [X] Trail move ordering
