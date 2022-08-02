@@ -1,0 +1,68 @@
+%We define the trails
+
+%Side predicate
+
+%%Preprocess
+ptrail(A,start(A),V ,V'    ) :- spath(A,V,V'), robot(A,V).
+ptrail(A,start(A),V ,end(A)) :- robot(A,V), not spath(A,_,_).
+ptrail(A,V       ,V',end(A)) :- spath(A,V,V'), not spath(A,V',_).
+ptrail(A,V       ,V',V''   ) :- spath(A,V,V'), spath(A,V',V'').
+
+%%Real trail
+edge(start(A),V) :- robot(A,V).
+edge(V,end(A)) :- goal(A,V).
+%{ edge(V,end(A)) : edge(V,_) ; edge(V,end(A)) : edge(_,V) }=1 :- robot(A,_), not goal(A,_).
+
+%{ trail(A,V,V',V'') } :- robot(A,_), edge(V,V'), edge(V',V'').
+
+:- trail(A,start(A'),_,_), A'!=A.
+:- trail(A,_,_,end(A')), A'!=A.
+%:- trail(A,V,V1,V2), trail(A,V',V1,V2), V<V'.
+%:- trail(A,V1,V2,V), trail(A,V1,V2,V'), V<V'.
+:- trail(A,V,V',_), not trail(A,_,V,V'), V!=start(A).
+:- trail(A,_,V,V'), not trail(A,V,V',_), V'!=end(A).
+
+{ trail(A,start(A),S,V) : edge(S,V)   ; trail(A,start(A),S,end(A)) }=1 :- robot(A,S).
+{ trail(A,V2,V3,V4)   : edge(V3,V4)                                }=1 :- trail(A,V1,V2,V3), V3!=end(A).
+{ trail(A,V0,V1,V2)   : edge(V0,V1)                                }=1 :- trail(A,V1,V2,V3), V1!=start(A).
+
+%:- trail(A,V,V',V''), trail(A,V2,V',V''), V<V2.
+%:- goal(A,G), not trail(A,_,G,end).
+
+%%Mandatory part
+visit(A,V) :- robot(A,V).
+visit(A,V) :- spath(A,_,V).
+
+conflict(A,V;A',V) :- visit(A,V), visit(A',V), A<A'.
+:- not trail(A,V,V',V''), ptrail(A,V,V',V''), not conflict(A,V).
+
+%Ordering
+
+%%Succesions
+%&diff{ (A,V,V')     - (A,V',V'')    } <= -1 :- trail(A,V,V',V'').
+%&diff{ (h(A),V,V',1)     - 0    } <= 0 :- trail(A,V,V',V'').
+&diff{ 0     - (A,V',V'',2)    } <= 0 :- trail(A,V,V',V'').
+
+%%Edge conflict
+%{ e_conflict(A,A',V,V') } :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=start(A), V'!=start(A').
+%  e_conflict(A',A,V',V)   :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=start(A), V'!=start(A'), not e_conflict(A,A',V,V').
+
+%&diff{ (A,V,V')     - (A',V',V)     } <= -1 :- e_conflict(A,A',V,V').
+
+%%Vertice conflict
+%{ v_conflict(A ,V,V2 ,A',V1',V) } :- trail(A,_ ,V,V2), trail(A',V1',V,_  ), A<A'.
+%  v_conflict(A',V,V2',A ,V1 ,V)   :- trail(A,V1,V,V2), trail(A',V1',V,V2'), A<A', not v_conflict(A,V,V2,A',V1',V).
+
+%&diff{ (A,V,V2)     - (A',V1',V)    } <= 0  :- v_conflict(A,V,V2,A',V1',V).
+
+%%Cornercases
+:- v_conflict(_,_,end(_),_,_,_). %Stay on the graph at the end
+:- v_conflict(_,_,_,_,start(_),_). %Is on the graph from the begining
+
+%#show e_conflict/4.
+%#show v_conflict/6.
+%#show edge/2.
+%#show trail/4.
+%#project trail/4.
+
+%#show.

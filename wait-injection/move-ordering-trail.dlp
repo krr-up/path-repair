@@ -7,8 +7,8 @@
 &diff{ (A,V,V')     - (A,V',V'')    } <= -1 :- trail(A,V,V',V'').
 
 %%Edge conflict
-{ e_conflict(A,A',V,V') } :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=garage, V'!=garage.
-  e_conflict(A',A,V',V)   :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=garage, V'!=garage, not e_conflict(A,A',V,V').
+{ e_conflict(A,A',V,V') } :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=start, V'!=start.
+  e_conflict(A',A,V',V)   :- trail(A,V,V',_), trail(A',V',V,_), A<A', V!=start, V'!=start, not e_conflict(A,A',V,V').
 
 &diff{ (A,V,V')     - (A',V',V)     } <= -1 :- e_conflict(A,A',V,V').
 
@@ -19,8 +19,8 @@
 &diff{ (A,V,V2)     - (A',V1',V)    } <= 0  :- v_conflict(A,V,V2,A',V1',V).
 
 %%Cornercases
-:- v_conflict(_,_,garage,_,_,_). %Stay on the graph at the end
-:- v_conflict(_,_,_,_,garage,_). %Is on the graph from the begining
+:- v_conflict(_,_,end,_,_,_). %Stay on the graph at the end
+:- v_conflict(_,_,_,_,start,_). %Is on the graph from the begining
 
 %Output
 %#show trail/4.
