@@ -43,6 +43,8 @@ Thoses plans may give better results.
 
 * **trail-test.lp**
 
+On top of that, *Roland* also made an encoding based on trails.
+
 ## Plan checker
 
 It may be interesting to define the properties of repairable plans.
@@ -57,6 +59,20 @@ This folder contains encodings to represent it.
   - From every vertex, we define a permutation of every agent that has to visit him.
   - We explicit the restrictions on those permutations
   - This encoding assume acyclic path as an input.
+
+## Summary
+
+|                             |   Result  |     Input     |   Output   | Path changes | Theory |
+|----------------------------:|:---------:|:-------------:|:----------:|:------------:|:------:|
+|         action-placement.lp |    Plan   |     spath     |   plan/3   |      no      |        |
+|           fill-with-wait.lp |    Plan   |     spath     |   plan/3   |      no      |        |
+|           move-ordering.dlp |    Plan   |     spath     |    dl/2    |      no      |   DL   |
+|     move-ordering-trail.dlp |    Plan   |     trail     |    dl/2    |      no      |   DL   |
+|                      vlp.lp | Intervals |     spath     | presence/3 |      no      |        |
+|  extended-move-ordering.dlp |    Plan   |     spath     |    dl/2    |      yes     |   DL   |
+| extended-move-ordering2.dlp |    Plan   |     spath     |    dl/2    |      yes     |   DL   |
+|              smalldetour.lp |   Paths   |     spath     |   path/4   |      yes     |        |
+|               trail-test.lp |   Trails  | MAPF instance |  trails/4  |              |        |
 
 ## TODO
 - [X] Add plan (path) checkers, to define the properties of repairable plan (path).
