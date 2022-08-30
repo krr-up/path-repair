@@ -1,11 +1,11 @@
 action(A,V,V')     :- spath(A,V,V').
-action(A,garage,V) :- task(A,V,_).
-action(A,V,garage) :- task(A,_,V).
+action(A,start,V)  :- task(A,V,_).
+action(A,V,end)    :- task(A,_,V).
 
 % The edge weight is the travel time between vertices
-&diff{ plan(A,move(V,V')) - plan(A,move(V',V'')) }  <= -1    :- spath(A,V,V'), spath(A,V',V'').
-&diff{ plan(A,move(garage,V)) - plan(A,move(V,V')) } <= 0    :- spath(A,V,V'), task(A,V,_).
-&diff{ plan(A,move(V',V)) - plan(A,move(V,garage)) } <= 0    :- spath(A,V',V), task(A,_,V).
+&diff{ plan(A,move(V,V'))    - plan(A,move(V',V'')) } <= -1     :- spath(A,V,V'), spath(A,V',V'').
+&diff{ plan(A,move(start,V)) - plan(A,move(V,V'))   } <= 0      :- spath(A,V,V'), task(A,V,_).
+&diff{ plan(A,move(V',V))    - plan(A,move(V,end))  } <= 0      :- spath(A,V',V), task(A,_,V).
 
 %edge constraint
 { ec_solving((A,move(V,V')),(A',move(V',V))) }   :- spath(A,V,V'), spath(A',V',V), A < A'.
@@ -14,17 +14,19 @@ action(A,V,garage) :- task(A,_,V).
 &diff{ plan(A,M) - plan(A',M') } <= -1 :- ec_solving((A,M),(A',M')).
 
 %vertex constraint
-{ vc_solving((A',move(V',V'')),(A,move(V,V'))) } :- action(A,V,V'), action(A',V',V''), A < A', V'!=garage.
-  vc_solving((A',move(V',V'')),(A,move(V,V')))   :- action(A,V,V'), action(A',V',V''), A > A', V'!=garage, not vc_solving((A,move(V',_)),(A',move(_,V'))).
+{ vc_solving((A',move(V',V'')),(A,move(V,V'))) } :- action(A,V,V'), action(A',V',V''), A < A'.
+  vc_solving((A',move(V',V'')),(A,move(V,V')))   :- action(A,V,V'), action(A',V',V''), A > A', not vc_solving((A,move(V',_)),(A',move(_,V'))).
 
 %cornercase
 %% start of plan
-:- vc_solving(_,(_,move(garage,_))).
+:- vc_solving(_,(_,move(start,_))).
 %% end of plan
-:- vc_solving((_,move(_,garage)),_).
+:- vc_solving((_,move(_,end)),_).
 
 &diff{ plan(A,M) - plan(A',M') } <= 0 :- vc_solving((A,M),(A',M')).
 
-#show.
+%#show.
+%#show vc_solving/2.
+%#show ve_solving/2.
 
 %#project vc_solving/2.

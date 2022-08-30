@@ -1,4 +1,4 @@
-#const horizon = 5.
+#const horizon = 8.
 
 { plan(A,move(V,V'),T) : T=1..horizon }=1:- spath(A,V,V').
 

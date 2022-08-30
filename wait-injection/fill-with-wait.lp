@@ -1,4 +1,4 @@
-#const horizon = 5.
+#const horizon = 10.
 
 %At each timepoint, I take an action
 { plan(A,move(V,V'),T) : spath(A,V,V') ; plan(A,wait,T)}=1 :- spath(A,_,_), T=1..horizon.
