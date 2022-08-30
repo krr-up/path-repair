@@ -5,6 +5,10 @@ edge((2, 1), (3, 1)). edge((3, 1), (2, 1)).
 robot(1,(1,1)).
 robot(2,(3,1)).
 
+agent(X) :- robot(X,Y).
+start(X,Y) :- robot(X,Y).
+vertex(X) :- edge(X,_).
+
 goal(1,(3,1)).
 goal(2,(1,1)).
 
